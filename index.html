@@ -70,21 +70,41 @@
 				if (event.key == "ArrowDown") { keyStates.down = false; }
 			});
 
+			let i = 0;
+
 			const intervalId = setInterval(() => {
 				for (let y = 0; y < h; y++) {
 					for (let x = 0; x < w; x++) {
-						gbSetPixel(x, y, 69);
+						if (((x + y) ^ i) % 16) {
+							gbSetPixel(x, y, 69);
+						} else {
+							gbSetPixel(x, y, 15);
+						}
 					}
 				}
 
-				if (keyStates.w) { world.player.pos.x += 2.0; }
-				if (keyStates.s) { world.player.pos.x -= 2.0; }
-				if (keyStates.a) { world.player.pos.y += 2.0; }
-				if (keyStates.d) { world.player.pos.y -= 2.0; }
-				if (keyStates.left) { world.player.rot -= 0.025; }
-				if (keyStates.right) { world.player.rot += 0.025; }
-				if (keyStates.up) { world.player.pos.z += 2.0; }
-				if (keyStates.down) { world.player.pos.z -= 2.0; }
+				i = (i + 1) % 32;
+
+				if (keyStates.w) {
+					world.player.pos.x += 4.0 * Math.sin(world.player.rot);
+					world.player.pos.y += 4.0 * Math.cos(world.player.rot);
+				}
+				if (keyStates.s) {
+					world.player.pos.x -= 4.0 * Math.sin(world.player.rot);
+					world.player.pos.y -= 4.0 * Math.cos(world.player.rot);
+				}
+				if (keyStates.a) {
+					world.player.pos.y -= 4.0 * Math.sin(-world.player.rot);
+					world.player.pos.x -= 4.0 * Math.cos(-world.player.rot);
+				}
+				if (keyStates.d) {
+					world.player.pos.y += 4.0 * Math.sin(-world.player.rot);
+					world.player.pos.x += 4.0 * Math.cos(-world.player.rot);
+				}
+				if (keyStates.left) { world.player.rot -= 0.05; }
+				if (keyStates.right) { world.player.rot += 0.05; }
+				if (keyStates.up) { world.player.pos.z -= 4.0; }
+				if (keyStates.down) { world.player.pos.z += 4.0; }
 
 				gbRenderWorld(world);
 

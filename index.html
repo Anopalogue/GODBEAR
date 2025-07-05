@@ -20,25 +20,28 @@
 			gbInitSurface(w, h);
 
 			let world = new gbWorld();
-			world.player.pos.z = 0.0;
-			world.player.rot = 0.95;
+			world.player.pos.x = 70.0;
+			world.player.pos.y = -110.0;
+			world.player.pos.z = 20.0;
+			world.player.rot = 0.0;
 
 			{
 				let wall = new gbWall();
-				wall.pos0.x = -100.0;
-				wall.pos0.y = -100.0;
-				wall.pos1.x = -100.0;
-				wall.pos1.y = 100.0;
+				wall.pos0.x = 40.0;
+				wall.pos0.y = 10.0;
+				wall.pos1.x = 40.0;
+				wall.pos1.y = 290.0;
+				wall.height = 100.0;
 				world.walls.push(wall);
 			}
-			{
+			/*{
 				let wall = new gbWall();
 				wall.pos0.x = 100.0;
 				wall.pos0.y = -100.0;
 				wall.pos1.x = 100.0;
 				wall.pos1.y = 100.0;
 				world.walls.push(wall);
-			}
+			}*/
 
 			let keyStates = {
 				w: false, a: false, s: false, d: false,

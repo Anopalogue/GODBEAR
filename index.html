@@ -2,9 +2,30 @@
 <html>
 	<head>
 		<title>GODBEAR</title>
+
+		<link rel="stylesheet" href="styles.css">
+
+		<script src="GODBEAR/color.js"></script>
+		<script src="GODBEAR/surface.js"></script>
+		<script src="GODBEAR/canvas.js"></script>
 	</head>
 
 	<body>
-		<p>Hello</p>
+		<canvas id="GODBEARCanvas"></canvas>
+		<script>
+			let w = 256, h = 256;
+			gbInitSurface(w, h);
+			gbCanvasHook(document.getElementById("GODBEARCanvas"));
+
+			for (let y = 0; y < h; y++) {
+				for (let x = 0; x < w; x++) {
+					gbSetPixel(x, y, y);
+				}
+			}
+
+			const intervalId = setInterval(() => {
+				gbCanvasRender();
+			}, (1.0 / 10.0) * 1000.0 );
+		</script>
 	</body>
 </html>

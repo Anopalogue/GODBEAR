@@ -8,24 +8,85 @@
 		<script src="GODBEAR/color.js"></script>
 		<script src="GODBEAR/surface.js"></script>
 		<script src="GODBEAR/canvas.js"></script>
+		<script src="GODBEAR/world/world.js"></script>
+		<script src="GODBEAR/world/render.js"></script>
 	</head>
 
 	<body>
 		<canvas id="GODBEARCanvas"></canvas>
 		<script>
-			let w = 256, h = 256;
+			let w = 128, h = 96;
 			gbInitSurface(w, h);
 			gbCanvasHook(document.getElementById("GODBEARCanvas"));
 
-			for (let y = 0; y < h; y++) {
-				for (let x = 0; x < w; x++) {
-					gbSetPixel(x, y, y);
-				}
+			let world = new gbWorld();
+			world.player.pos.z = 0.0;
+			world.player.rot = 0.95;
+
+			{
+				let wall = new gbWall();
+				wall.pos0.x = -100.0;
+				wall.pos0.y = -100.0;
+				wall.pos1.x = -100.0;
+				wall.pos1.y = 100.0;
+				world.walls.push(wall);
+			}
+			{
+				let wall = new gbWall();
+				wall.pos0.x = 100.0;
+				wall.pos0.y = -100.0;
+				wall.pos1.x = 100.0;
+				wall.pos1.y = 100.0;
+				world.walls.push(wall);
 			}
 
+			let keyStates = {
+				w: false, a: false, s: false, d: false,
+				left: false, right: false, up: false, down: false
+			};
+
+			document.addEventListener('keydown', function(event) {
+				if (event.key == 'W' || event.key == 'w') { keyStates.w = true; }
+				if (event.key == 'A' || event.key == 'a') { keyStates.a = true; }
+				if (event.key == 'S' || event.key == 's') { keyStates.s = true; }
+				if (event.key == 'D' || event.key == 'd') { keyStates.d = true; }
+				if (event.key == "ArrowLeft") { keyStates.left = true; }
+				if (event.key == "ArrowRight") { keyStates.right = true; }
+				if (event.key == "ArrowUp") { keyStates.up = true; }
+				if (event.key == "ArrowDown") { keyStates.down = true; }
+			});
+
+			document.addEventListener('keyup', function(event) {
+				if (event.key == 'W' || event.key == 'w') { keyStates.w = false; }
+				if (event.key == 'A' || event.key == 'a') { keyStates.a = false; }
+				if (event.key == 'S' || event.key == 's') { keyStates.s = false; }
+				if (event.key == 'D' || event.key == 'd') { keyStates.d = false; }
+				if (event.key == "ArrowLeft") { keyStates.left = false; }
+				if (event.key == "ArrowRight") { keyStates.right = false; }
+				if (event.key == "ArrowUp") { keyStates.up = false; }
+				if (event.key == "ArrowDown") { keyStates.down = false; }
+			});
+
 			const intervalId = setInterval(() => {
+				for (let y = 0; y < h; y++) {
+					for (let x = 0; x < w; x++) {
+						gbSetPixel(x, y, 69);
+					}
+				}
+
+				if (keyStates.w) { world.player.pos.x += 2.0; }
+				if (keyStates.s) { world.player.pos.x -= 2.0; }
+				if (keyStates.a) { world.player.pos.y += 2.0; }
+				if (keyStates.d) { world.player.pos.y -= 2.0; }
+				if (keyStates.left) { world.player.rot -= 0.025; }
+				if (keyStates.right) { world.player.rot += 0.025; }
+				if (keyStates.up) { world.player.pos.z += 2.0; }
+				if (keyStates.down) { world.player.pos.z -= 2.0; }
+
+				gbRenderWorld(world);
+
 				gbCanvasRender();
-			}, (1.0 / 10.0) * 1000.0 );
+			}, (1.0 / 30.0) * 1000.0 );
 		</script>
 	</body>
 </html>

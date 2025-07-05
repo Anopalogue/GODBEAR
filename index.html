@@ -25,21 +25,35 @@
 			world.player.pos.z = 20.0;
 			world.player.rot = 0.0;
 
-			{
+			for (let i = 0; i < 256; i++) {
+				let wall = new gbWall();
+				wall.pos0.x = 40.0 - (i * 40);
+				wall.pos0.y = 10.0;
+				wall.pos1.x = wall.pos0.x;
+				wall.pos0.y = 290.0;
+				wall.height = 50 + (i * 10);
+				wall.color = i;
+				world.walls.push(wall);
+			}
+
+			/*{
 				let wall = new gbWall();
 				wall.pos0.x = 40.0;
 				wall.pos0.y = 10.0;
 				wall.pos1.x = 40.0;
 				wall.pos1.y = 290.0;
 				wall.height = 100.0;
+				wall.color = 0;
 				world.walls.push(wall);
 			}
-			/*{
+			{
 				let wall = new gbWall();
-				wall.pos0.x = 100.0;
-				wall.pos0.y = -100.0;
-				wall.pos1.x = 100.0;
-				wall.pos1.y = 100.0;
+				wall.pos0.x = -40.0;
+				wall.pos0.y = 10.0;
+				wall.pos1.x = -40.0;
+				wall.pos1.y = 290.0;
+				wall.height = 100.0;
+				wall.color = 46;
 				world.walls.push(wall);
 			}*/
 

@@ -45,10 +45,10 @@ function gbRenderWall(world, wall) {
 	let p0b, p1b, p0t, p1t;
 	{
 		// Map to world coordinates
-		let p0bWorld = pointWorldCoords(world, wall.pos0);
-		let p1bWorld = pointWorldCoords(world, wall.pos1);
-		let p0tWorld = pointWorldCoords(world, { x: wall.pos0.x, y: wall.pos0.y, z: wall.pos0.z + wall.height });
-		let p1tWorld = pointWorldCoords(world, { x: wall.pos1.x, y: wall.pos1.y, z: wall.pos1.z + wall.height });
+		let p0bWorld = pointWorldCoords(world, { x: wall.pos0.x, y: wall.pos0.y, z: wall.pos0.z - wall.height });
+		let p1bWorld = pointWorldCoords(world, { x: wall.pos1.x, y: wall.pos1.y, z: wall.pos1.z - wall.height });
+		let p0tWorld = pointWorldCoords(world, wall.pos0);
+		let p1tWorld = pointWorldCoords(world, wall.pos1);
 
 		// Ignore this wall if it's fully behind player
 		if (p0bWorld.y < 1.0 && p1bWorld.y < 1.0) {
@@ -100,7 +100,7 @@ function gbRenderWall(world, wall) {
 		let y = pyb;
 		if (y < 0.0) { y = 0.0; }
 		while (y <= pyt && y < parseFloat(gbSurface.height)) {
-			gbSetPixel(x, y, 0);
+			gbSetPixel(x, y, wall.color);
 			y += 1.0;
 		}
 
@@ -108,9 +108,40 @@ function gbRenderWall(world, wall) {
 	}
 }
 
+function gbSortWallsInsertionSort(warr, iarr) {
+	// https://www.doabledanny.com/insertion-sort-in-javascript
+	for (let i = 1; i < warr.length; i++) {
+		let icurr = iarr[i];
+		let wcurr = warr[i];
+		let j;
+		for (j = i - 1; j >= 0 && iarr[j] < icurr; j--) {
+			warr[j + 1] = warr[j];
+			iarr[j + 1] = iarr[j];
+		}
+		warr[j + 1] = wcurr;
+		iarr[j + 1] = icurr;
+	}
+}
+
+function gbSortWalls(world, walls) {
+	let wdists = [];
+	for (let i = 0; i < walls.length; i++) {
+		wdists.push(Math.min(
+			Math.sqrt(Math.pow(walls[i].pos0.x - world.player.pos.x, 2.0) + Math.pow(walls[i].pos0.y - world.player.pos.y, 2.0)),
+			Math.sqrt(Math.pow(walls[i].pos1.x - world.player.pos.x, 2.0) + Math.pow(walls[i].pos1.y - world.player.pos.y, 2.0))
+		));
+		console.log(wdists[i]);
+	}
+
+	gbSortWallsInsertionSort(walls, wdists);
+}
+
 function gbRenderWorld(world) {
+	renderWalls = [...world.walls];
+	gbSortWalls(world, renderWalls);
+
 	let i;
 	for (i = 0; i < world.walls.length; i++) {
-		gbRenderWall(world, world.walls[i]);
+		gbRenderWall(world, renderWalls[i]);
 	}
 }

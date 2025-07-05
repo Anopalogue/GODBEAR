@@ -7,7 +7,7 @@ const gbCanvasObserver = new ResizeObserver((entries) => {
 })
 
 function gbCanvasStep(timestamp) {
-
+	
 }
 
 function gbCanvasRender() {

@@ -1,19 +1,20 @@
+let gbCtx;
+
 gbSurface = {
 	width: 128,
 	height: 96,
-	pixels: new Uint8Array(1)
+	imageData: null
 };
 
 function gbInitSurface(w, h) {
 	gbSurface.width = w;
 	gbSurface.height = h;
-	gbSurface.pixels = new Uint8Array(gbSurface.width * gbSurface.height);
+	gbSurface.imageData = gbCtx.createImageData(w, h);
 }
 
 function gbSetPixel(x, y, color) {
-	gbSurface[(y * gbSurface.width) + x] = color;
-}
-
-function gbGetPixel(x, y) {
-	return gbSurface[(y * gbSurface.width) + x];
+	gbSurface.imageData.data[(((y * gbSurface.width) + x) * 4)] = gbXtermColors[color][0];
+	gbSurface.imageData.data[(((y * gbSurface.width) + x) * 4) + 1] = gbXtermColors[color][1];
+	gbSurface.imageData.data[(((y * gbSurface.width) + x) * 4) + 2] = gbXtermColors[color][2];
+	gbSurface.imageData.data[(((y * gbSurface.width) + x) * 4) + 3] = 255;
 }

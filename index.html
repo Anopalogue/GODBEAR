@@ -16,8 +16,8 @@
 		<canvas id="GODBEARCanvas"></canvas>
 		<script>
 			let w = 128, h = 96;
-			gbInitSurface(w, h);
 			gbCanvasHook(document.getElementById("GODBEARCanvas"));
+			gbInitSurface(w, h);
 
 			let world = new gbWorld();
 			world.player.pos.z = 0.0;

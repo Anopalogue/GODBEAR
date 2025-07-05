@@ -1,5 +1,4 @@
 let gbCanvas;
-let gbCtx;
 let gbCanvasWidth = 300;
 let gbCanvasHeight = 150;
 const gbCanvasObserver = new ResizeObserver((entries) => {
@@ -18,24 +17,24 @@ function gbCanvasRender() {
 
 	let pixWidth = parseFloat(gbCanvasWidth) / parseFloat(gbSurface.width);
 	let pixHeight = parseFloat(gbCanvasHeight) / parseFloat(gbSurface.height);
-	let pixDim;
-	let xoff = 0.0, yoff = 0.0;
-	if (pixWidth > pixHeight) {
-		pixDim = pixHeight;
-		xoff = (gbCanvasWidth - (pixDim * gbSurface.width)) / 2.0;
-	} else {
-		pixDim = pixWidth;
-		yoff = (gbCanvasHeight - (pixDim * gbSurface.height)) / 2.0;
-	}
+	let pixDim = (pixWidth < pixHeight) ?(pixWidth) :(pixHeight);
+	gbCtx.putImageData(gbSurface.imageData, 0, 0, 0, 0, gbSurface.width, gbSurface.height);
 
-	let x, y;
-	for (x = 0; x < gbSurface.width; x++) {
-		for (y = 0; y < gbSurface.height; y++) {
-			let fx = xoff + (parseFloat(x) * pixDim);
-			let fy = yoff + (parseFloat(y) * pixDim);
-			gbCtx.fillStyle = gbXtermColors[gbGetPixel(x, y)];
-			gbCtx.fillRect(Math.floor(fx), Math.floor(fy), Math.ceil(pixDim), Math.ceil(pixDim));
-		}
+	// This code is BEAUTIFUL, I LOVE IT!
+	gbCtx.imageSmoothingEnabled = false;
+	gbCtx.scale(pixDim, pixDim);
+	if (pixWidth < pixHeight) {
+		let yoff = ((gbCanvasHeight - (pixDim * gbSurface.height)) / 2.0) / pixDim;
+		gbCtx.drawImage(gbCtx.canvas, 0, yoff);
+		gbCtx.fillStyle = 'black';
+		gbCtx.fillRect(0, 0, Math.ceil(gbCanvasWidth / pixDim), Math.ceil(yoff));
+		gbCtx.fillRect(0, Math.floor((gbCanvasHeight / pixDim) - yoff), Math.ceil(gbCanvasWidth / pixDim), Math.ceil(yoff + 1.0));
+	} else {
+		let xoff = ((gbCanvasWidth - (pixDim * gbSurface.width)) / 2.0) / pixDim;
+		gbCtx.drawImage(gbCtx.canvas, xoff, 0);
+		gbCtx.fillStyle = 'black';
+		gbCtx.fillRect(0, 0, Math.ceil(xoff), Math.ceil(gbCanvasHeight / pixDim));
+		gbCtx.fillRect(Math.floor((gbCanvasWidth / pixDim) - xoff), 0, Math.ceil(xoff + 1.0), Math.ceil(gbCanvasHeight / pixDim));
 	}
 
 	gbCtx.restore();

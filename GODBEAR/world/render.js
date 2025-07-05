@@ -10,7 +10,6 @@ function transformPoint(world, point) {
 		z: np0.z
 	};
 	np1.z += ((np1.y) / 32.0);
-	console.log(np1.x + ", " + np1.y);
 	let np2 = {
 		x: ((200.0 * np1.x) / np1.y) + (parseFloat(gbSurface.width) / 2.0),
 		y: ((200.0 * np1.z) / np1.y) + (parseFloat(gbSurface.height) / 2.0)

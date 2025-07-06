@@ -20,17 +20,28 @@
 			gbInitSurface(w, h);
 
 			let world = new gbWorld();
-			world.player.pos.x = 70.0;
-			world.player.pos.y = -110.0;
-			world.player.pos.z = 20.0;
-			world.player.rot = 0.0;
+			world.player.pos.x = 70;
+			world.player.pos.y = -110;
+			world.player.pos.z = 20;
+			world.player.rot = 0;
 
-			for (let i = 0; i < 256; i++) {
+			for (let i = 255; i >= 0; i--) {
 				let wall = new gbWall();
-				wall.pos0.x = 40.0 - (i * 40);
-				wall.pos0.y = 10.0;
+				wall.pos0.x = 40 - (i * 40);
+				wall.pos0.y = 10;
 				wall.pos1.x = wall.pos0.x;
-				wall.pos0.y = 290.0;
+				wall.pos1.y = 290;
+				wall.height = 50 + (i * 10);
+				wall.color = i;
+				world.walls.push(wall);
+			}
+
+			for (let i = 0; i < 255; i++) {
+				let wall = new gbWall();
+				wall.pos0.x = 40 - (i * 40);
+				wall.pos1.y = 10;
+				wall.pos1.x = wall.pos0.x;
+				wall.pos0.y = 290;
 				wall.height = 50 + (i * 10);
 				wall.color = i;
 				world.walls.push(wall);
@@ -38,21 +49,82 @@
 
 			/*{
 				let wall = new gbWall();
-				wall.pos0.x = 40.0;
-				wall.pos0.y = 10.0;
-				wall.pos1.x = 40.0;
-				wall.pos1.y = 290.0;
-				wall.height = 100.0;
+				wall.pos0.x = -50;
+				wall.pos0.y = -50;
+				wall.pos1.x = 50;
+				wall.pos1.y = -50;
+				wall.height = 100;
 				wall.color = 0;
 				world.walls.push(wall);
 			}
 			{
 				let wall = new gbWall();
-				wall.pos0.x = -40.0;
-				wall.pos0.y = 10.0;
-				wall.pos1.x = -40.0;
-				wall.pos1.y = 290.0;
-				wall.height = 100.0;
+				wall.pos0.x = 50;
+				wall.pos0.y = -50;
+				wall.pos1.x = 50;
+				wall.pos1.y = 50;
+				wall.height = 100;
+				wall.color = 46;
+				world.walls.push(wall);
+			}
+			{
+				let wall = new gbWall();
+				wall.pos0.x = 50;
+				wall.pos0.y = 50;
+				wall.pos1.x = -50;
+				wall.pos1.y = 50;
+				wall.height = 100;
+				wall.color = 0;
+				world.walls.push(wall);
+			}
+			{
+				let wall = new gbWall();
+				wall.pos0.x = -50;
+				wall.pos0.y = 50;
+				wall.pos1.x = -50;
+				wall.pos1.y = -50;
+				wall.height = 100;
+				wall.color = 46;
+				world.walls.push(wall);
+			}
+			
+			{
+				let wall = new gbWall();
+				wall.pos0.x = -50 - 150;
+				wall.pos0.y = -50;
+				wall.pos1.x = 50 - 150;
+				wall.pos1.y = -50;
+				wall.height = 100;
+				wall.color = 0;
+				world.walls.push(wall);
+			}
+			{
+				let wall = new gbWall();
+				wall.pos0.x = 50 - 150;
+				wall.pos0.y = -50;
+				wall.pos1.x = 50 - 150;
+				wall.pos1.y = 50;
+				wall.height = 100;
+				wall.color = 46;
+				world.walls.push(wall);
+			}
+			{
+				let wall = new gbWall();
+				wall.pos0.x = 50 - 150;
+				wall.pos0.y = 50;
+				wall.pos1.x = -50 - 150;
+				wall.pos1.y = 50;
+				wall.height = 100;
+				wall.color = 0;
+				world.walls.push(wall);
+			}
+			{
+				let wall = new gbWall();
+				wall.pos0.x = -50 - 150;
+				wall.pos0.y = 50;
+				wall.pos1.x = -50 - 150;
+				wall.pos1.y = -50;
+				wall.height = 100;
 				wall.color = 46;
 				world.walls.push(wall);
 			}*/
@@ -100,25 +172,25 @@
 				i = (i + 1) % 32;
 
 				if (keyStates.w) {
-					world.player.pos.x += 4.0 * Math.sin(world.player.rot);
-					world.player.pos.y += 4.0 * Math.cos(world.player.rot);
+					world.player.pos.x += parseInt(Math.round(4.0 * Math.sin(world.player.rot * (Math.PI / 180.0))));
+					world.player.pos.y += parseInt(Math.round(4.0 * Math.cos(world.player.rot * (Math.PI / 180.0))));
 				}
 				if (keyStates.s) {
-					world.player.pos.x -= 4.0 * Math.sin(world.player.rot);
-					world.player.pos.y -= 4.0 * Math.cos(world.player.rot);
+					world.player.pos.x -= parseInt(Math.round(4.0 * Math.sin(world.player.rot * (Math.PI / 180.0))));
+					world.player.pos.y -= parseInt(Math.round(4.0 * Math.cos(world.player.rot * (Math.PI / 180.0))));
 				}
 				if (keyStates.a) {
-					world.player.pos.y -= 4.0 * Math.sin(-world.player.rot);
-					world.player.pos.x -= 4.0 * Math.cos(-world.player.rot);
+					world.player.pos.y -= parseInt(Math.round(4.0 * Math.sin(-world.player.rot * (Math.PI / 180.0))));
+					world.player.pos.x -= parseInt(Math.round(4.0 * Math.cos(-world.player.rot * (Math.PI / 180.0))));
 				}
 				if (keyStates.d) {
-					world.player.pos.y += 4.0 * Math.sin(-world.player.rot);
-					world.player.pos.x += 4.0 * Math.cos(-world.player.rot);
+					world.player.pos.y += parseInt(Math.round(4.0 * Math.sin(-world.player.rot * (Math.PI / 180.0))));
+					world.player.pos.x += parseInt(Math.round(4.0 * Math.cos(-world.player.rot * (Math.PI / 180.0))));
 				}
-				if (keyStates.left) { world.player.rot -= 0.05; }
-				if (keyStates.right) { world.player.rot += 0.05; }
-				if (keyStates.up) { world.player.pos.z -= 4.0; }
-				if (keyStates.down) { world.player.pos.z += 4.0; }
+				if (keyStates.left) { world.player.rot -= 2; }
+				if (keyStates.right) { world.player.rot += 2; }
+				if (keyStates.up) { world.player.pos.z -= 2; }
+				if (keyStates.down) { world.player.pos.z += 2; }
 
 				gbRenderWorld(world);
 

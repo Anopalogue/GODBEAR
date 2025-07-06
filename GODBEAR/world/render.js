@@ -5,11 +5,10 @@ function pointWorldCoords(world, point) {
 		z: point.z - world.player.pos.z
 	};
 	let np1 = {
-		x: (np0.x * Math.cos(world.player.rot)) - (np0.y * Math.sin(world.player.rot)),
-		y: (np0.y * Math.cos(world.player.rot)) + (np0.x * Math.sin(world.player.rot)),
+		x: (np0.x * Math.cos(world.player.rot * (Math.PI / 180.0))) - (np0.y * Math.sin(world.player.rot * (Math.PI / 180.0))),
+		y: (np0.y * Math.cos(world.player.rot * (Math.PI / 180.0))) + (np0.x * Math.sin(world.player.rot * (Math.PI / 180.0))),
 		z: np0.z
 	};
-	//np1.z += ((np1.y) / 32.0);
 	return np1;
 }
 
@@ -70,26 +69,14 @@ function gbRenderWall(world, wall) {
 		p1t = worldToScreenMap(p1tWorld);
 	}
 
-	let x0, y0, x1, y1;
-	let y0t, y1t;
-	if (p0b.x < p1b.x) {
-		x0 = p0b.x;
-		y0 = p0b.y;
-		x1 = p1b.x;
-		y1 = p1b.y;
-		y0t = p0t.y;
-		y1t = p1t.y;
-	} else {
-		x0 = p1b.x;
-		y0 = p1b.y;
-		x1 = p0b.x;
-		y1 = p0b.y;
-		y0t = p1t.y;
-		y1t = p0t.y;
+	let x0 = p0b.x, y0 = p0b.y, x1 = p1b.x, y1 = p1b.y;
+	let y0t = p0t.y, y1t = p1t.y;
+	let d = x1 - x0;
+	if (d == 0.0) {
+		d = 1.0;
 	}
-
-	let slopeBot = (y1 - y0) / (x1 - x0);
-	let slopeTop = (y1t - y0t) / (x1 - x0);
+	let slopeBot = (y1 - y0) / d;
+	let slopeTop = (y1t - y0t) / d;
 	let x = Math.round(x0);
 	if (x < 0.0) { x = 0.0; }
 	
@@ -108,40 +95,11 @@ function gbRenderWall(world, wall) {
 	}
 }
 
-function gbSortWallsInsertionSort(warr, iarr) {
-	// https://www.doabledanny.com/insertion-sort-in-javascript
-	for (let i = 1; i < warr.length; i++) {
-		let icurr = iarr[i];
-		let wcurr = warr[i];
-		let j;
-		for (j = i - 1; j >= 0 && iarr[j] < icurr; j--) {
-			warr[j + 1] = warr[j];
-			iarr[j + 1] = iarr[j];
-		}
-		warr[j + 1] = wcurr;
-		iarr[j + 1] = icurr;
-	}
-}
-
-function gbSortWalls(world, walls) {
-	let wdists = [];
-	for (let i = 0; i < walls.length; i++) {
-		wdists.push(Math.min(
-			Math.sqrt(Math.pow(walls[i].pos0.x - world.player.pos.x, 2.0) + Math.pow(walls[i].pos0.y - world.player.pos.y, 2.0)),
-			Math.sqrt(Math.pow(walls[i].pos1.x - world.player.pos.x, 2.0) + Math.pow(walls[i].pos1.y - world.player.pos.y, 2.0))
-		));
-		console.log(wdists[i]);
-	}
-
-	gbSortWallsInsertionSort(walls, wdists);
-}
-
 function gbRenderWorld(world) {
-	renderWalls = [...world.walls];
-	gbSortWalls(world, renderWalls);
+	console.log("(" + world.player.pos.x + ", " + world.player.pos.y + ", " + world.player.pos.z + ") - " + world.player.rot + "deg");	
 
 	let i;
 	for (i = 0; i < world.walls.length; i++) {
-		gbRenderWall(world, renderWalls[i]);
+		gbRenderWall(world, world.walls[i]);
 	}
 }

@@ -43,7 +43,7 @@
 				wall.pos1.x = wall.pos0.x;
 				wall.pos0.y = 290;
 				wall.height = 50 + (i * 10);
-				wall.color = i;
+				wall.color = 1;
 				world.walls.push(wall);
 			}
 
@@ -161,11 +161,12 @@
 			const intervalId = setInterval(() => {
 				for (let y = 0; y < h; y++) {
 					for (let x = 0; x < w; x++) {
-						if (((x + y) ^ i) % 16) {
+						/*if (((x + y) ^ i) % 16) {
 							gbSetPixel(x, y, 69);
 						} else {
 							gbSetPixel(x, y, 15);
-						}
+						}*/
+						gbSetPixel(x, y, 0);
 					}
 				}
 

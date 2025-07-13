@@ -5,6 +5,10 @@ function gbWall() {
 	this.color = 0;
 }
 
+function gbSector() {
+	this.points = [];
+}
+
 function gbPlayer() {
 	this.pos = { x: 0, y: 0, z: 0 };
 	this.rot = 0; // (Degrees)
